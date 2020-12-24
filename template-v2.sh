@@ -20,7 +20,7 @@ trap clean_up ERR EXIT SIGINT SIGTERM
 
 usage() {
     cat <<EOF
-Usage: ${script_name} [-h | --help] [-a <ARG>] [--abc <ARG>] [-f]
+Usage: ${script_name} [-h | --help] [-a <ARG>] [--abc <ARG>] [-f | --flag]
 
 DESCRIPTION
     Your description here.
@@ -120,15 +120,13 @@ fi
 if ((abc_option_flag)); then            # Check if the flag options are set or ON:
     # Logic for when --abc is set.
     # "${abc_arg}" should also be set.
-    echo "abc option set"
-    echo "Arg: [${abc_arg}]"
+    echo "Using --abc option -> arg: [${abc_arg}]"
 fi
 
 if ((a_option_flag)); then
     # Logic for when -a is set.
     # "${a_arg}" should also be set.
-    echo "a option set"
-    echo "Arg: [${a_arg}]"
+    echo "Using -a option -> arg: [${a_arg}]"
 fi
 
 exit 0
