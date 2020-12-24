@@ -56,6 +56,8 @@ if [[ ! -f "${conf_file}" ]]; then
     die "error reading configuration file: ${conf_file}" "${error_reading_conf_file}"
 fi
 
+. "${conf_file}"
+
 parse_user_options() {
     local -r user_options="${@}"
     local opts
