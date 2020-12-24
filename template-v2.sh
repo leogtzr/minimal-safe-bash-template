@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 #: Your comments here.
 
-# set -x
-
 set -o errexit
 set -o nounset
 set -o pipefail
