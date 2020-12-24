@@ -17,7 +17,7 @@ flag_option_flag=0
 trap clean_up ERR EXIT SIGINT SIGTERM
 
 usage() {
-    cat <<EOF
+    cat <<USAGE_TEXT
 Usage: ${script_name} [-h | --help] [-a <ARG>] [--abc <ARG>] [-f | --flag]
 
 DESCRIPTION
@@ -37,7 +37,7 @@ DESCRIPTION
     --abc
         Description for the --abc option.
 
-EOF
+USAGE_TEXT
 }
 
 clean_up() {
@@ -51,7 +51,6 @@ die() {
     echo "${msg}" >&2
     exit "${code}"
 }
-
 
 if [[ ! -f "${conf_file}" ]]; then
     die "error reading configuration file: ${conf_file}" "${error_reading_conf_file}"

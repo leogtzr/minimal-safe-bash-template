@@ -17,7 +17,7 @@ flag_option_flag=0
 trap clean_up ERR EXIT SIGINT SIGTERM
 
 usage() {
-    cat <<EOF
+    cat <<USAGE_TEXT
 Usage: ${script_name} [-h | --help] [-a <ARG>] [--abc <ARG>] [-f | --flag]
 
 DESCRIPTION
@@ -37,7 +37,7 @@ DESCRIPTION
     --abc
         Description for the --abc option.
 
-EOF
+USAGE_TEXT
 }
 
 clean_up() {
@@ -52,57 +52,63 @@ die() {
     exit "${code}"
 }
 
-opts=$(getopt --options a:,f,h --long abc:,flag,help -- "${@}" 2> /dev/null) || {
-    usage
-    die "error: parsing options" "${error_parsing_options}"
-}
-
-
 if [[ ! -f "${conf_file}" ]]; then
     die "error reading configuration file: ${conf_file}" "${error_reading_conf_file}"
 fi
 
-eval set -- "${opts}"
+parse_user_options() {
+    local -r user_options="${@}"
+    local opts
 
-while true; do
-    case "${1}" in
+    opts=$(getopt --options a:,f,h --long abc:,help,flag -- ${user_options[@]} 2> /dev/null) || {
+        usage
+        die "error: parsing options" "${error_parsing_options}"
+    }
 
-        --abc)
-            abc_option_flag=1
-            readonly abc_arg="${2}"
-            shift
-            shift
-            ;;
+    eval set -- "${opts}"
 
-        -a)
-            a_option_flag=1
-            readonly a_arg="${2}"
-            shift
-            shift
-            ;;
+    while true; do
+        case "${1}" in
 
-        --help|-h)
-            usage
+            --abc)
+                abc_option_flag=1
+                readonly abc_arg="${2}"
+                shift
+                shift
+                ;;
 
-            exit 0
-            shift
-            ;;
+            -a)
+                a_option_flag=1
+                readonly a_arg="${2}"
+                shift
+                shift
+                ;;
 
-        --flag|-f)
-            flag_option_flag=1
+            --help|-h)
+                usage
 
-            shift
-            ;;
+                exit 0
+                shift
+                ;;
 
-        --)
-            shift
-            break
-            ;;
-        *)
-            break
-            ;;
-    esac
-done
+            --flag|-f)
+                flag_option_flag=1
+
+                shift
+                ;;
+
+            --)
+                shift
+                break
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+}
+
+parse_user_options ${@}
 
 if ((flag_option_flag)); then
     echo "flag option set"
