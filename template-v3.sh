@@ -56,16 +56,22 @@ if [[ ! -f "${conf_file}" ]]; then
     die "error reading configuration file: ${conf_file}" "${error_reading_conf_file}"
 fi
 
+# shellcheck source=script.conf
 . "${conf_file}"
 
-opts=$(getopt --options a:,f,h --long abc:,help,flag -- "${@}" 2> /dev/null) || {
-    usage
-    die "error: parsing options" "${error_parsing_options}"
-}
+parse_user_options() {
+    local -r args=("${@}")
+    local opts
 
-eval set -- "${opts}"
+    # The following code works perfectly for 
+    opts=$(getopt --options a:,f,h --long abc:,help,flag -- "${args[@]}" 2> /dev/null) || {
+        usage
+        die "error: parsing options" "${error_parsing_options}"
+    }
 
-while true; do
+    eval set -- "${opts}"
+
+    while true; do
     case "${1}" in
 
         --abc)
@@ -103,7 +109,10 @@ while true; do
             break
             ;;
     esac
-done
+    done
+}
+
+parse_user_options "${@}"
 
 if ((flag_option_flag)); then
     echo "flag option set"
