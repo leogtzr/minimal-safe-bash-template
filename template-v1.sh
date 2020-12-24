@@ -47,7 +47,7 @@ clean_up() {
 
 die() {
     local -r msg="${1}"
-    local -r code="${2-1}"
+    local -r code="${2:-90}"
     echo "${msg}" >&2
     exit "${code}"
 }
